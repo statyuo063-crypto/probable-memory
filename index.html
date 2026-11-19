@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>X_HUB_PHANTOM_STORE</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #050507; color: #fff; min-height: 100vh; padding: 12px 12px 76px; }
+        .wrap { max-width: 440px; margin: 0 auto; }
+        .pane { display: none; }
+        .pane.active { display: block; }
+        .card { background: #121218; border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+        .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .title { font-size: 0.9rem; font-weight: 800; }
+        .sub { font-size: 0.72rem; color: #9a9aa6; margin-top: 2px; }
+        .badge { padding: 5px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 800; background: rgba(255,30,77,0.16); color: #ff6382; border: 1px solid rgba(255,30,77,0.45); }
+        .badge.on { background: rgba(0,255,136,0.16); color: #00ff88; border-color: rgba(0,255,136,0.45); }
+        .field { width: 100%; background: #09090d; border: 1px solid rgba(255,255,255,0.14); color: #fff; border-radius: 8px; padding: 9px 10px; font-size: 0.76rem; margin-bottom: 8px; outline: none; }
+        .row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .btn { flex: 1; border: none; border-radius: 8px; padding: 10px 12px; font-size: 0.78rem; font-weight: 700; color: #fff; background: #ff1e4d; cursor: pointer; }
+        .btn.gray { background: #23232e; border: 1px solid rgba(255,255,255,0.14); }
+        .btn.green { background: #009c55; }
+        .btn:active { transform: scale(0.99); }
+        .sw { min-width: 72px; padding: 6px 10px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.16); background: #22222c; color: #aaa; font-size: 0.72rem; font-weight: 700; cursor: pointer; }
+        .sw.on { background: rgba(0,255,136,0.18); color: #00ff88; border-color: rgba(0,255,136,0.45); }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.8rem; }
+        .item:last-child { border-bottom: none; }
+        .pct-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+        .pct-num { font-size: 1.6rem; font-weight: 900; color: #ff1e4d; }
+        input[type="range"] { width: 100%; height: 28px; accent-color: #ff1e4d; touch-action: pan-x; }
+        .marks { display: flex; justify-content: space-between; font-size: 0.68rem; color: #8f8f9c; margin-top: 4px; }
+        .marks span.active { color: #fff; font-weight: 700; }
+        .toast { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); background: #181822; color: #fff; border: 1px solid #00ff88; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; display: none; z-index: 9999; }
+        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0d0d12; border-top: 1px solid rgba(255,255,255,0.14); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+        .nav button { background: none; border: none; color: #8c8c99; font-size: 0.74rem; font-weight: 700; padding: 6px 16px; cursor: pointer; }
+        .nav button.active { color: #fff; border-bottom: 2px solid #ff1e4d; }
+    </style>
+</head>
+<body>
+    <div id="toast" class="toast"></div>
+    <div class="wrap">
+        <div class="card">
+            <div class="head" style="margin-bottom:0;">
+                <div>
+                    <div class="title" id="top-title">X_HUB_PHANTOM_STORE</div>
+                    <div class="sub" id="top-sub">สถานะ: พร้อมใช้งาน</div>
+                </div>
+                <div id="top-badge" class="badge on">READY</div>
+            </div>
+        </div>
+
+        <div id="pane-home" class="pane active">
+            <div class="card">
+                <div class="head">
+                    <span class="title">คีย์และลิงก์โปรไฟล์</span>
+                    <button id="btn-power" class="sw on" onclick="togglePower()">เปิดอยู่</button>
+                </div>
+
+                <div class="row">
+                    <input type="text" id="key-box" class="field" style="margin-bottom:0;" value="PHTM-80E0-6C92-0B07" readonly>
+                    <button class="btn gray" style="flex:0 0 92px;" onclick="makeKey()">ออกคีย์</button>
+                </div>
+
+                <input type="text" id="link-box" class="field" style="margin-top:8px;" readonly onclick="copyLink()">
+
+                <div class="row" style="margin-bottom:0;">
+                    <button class="btn gray" onclick="copyLink()">คัดลอกลิงก์</button>
+                    <button class="btn green" onclick="openApp('com.v2ray.tun')">เปิด Happ</button>
+                    <button class="btn" onclick="openApp('com.dts.freefireth')">เข้าเกม</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="pct-row">
+                    <span class="title">ระดับเปอร์เซ็นต์</span>
+                    <span class="pct-num" id="pct-label">100%</span>
+                </div>
+                <input type="range" id="pct-range" min="0" max="100" value="100" oninput="setPct(this.value)">
+                <div class="marks">
+                    <span id="m0">0%</span>
+                    <span id="m30">30%</span>
+                    <span id="m58">58%</span>
+                    <span id="m70">70%</span>
+                    <span id="m100" class="active">100%</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="title" style="margin-bottom:6px;">สวิตช์ตัวเลือก</div>
+                <div class="item">
+                    <span>ล็อคค่าเปอร์เซ็นต์ในเครื่อง</span>
+                    <button id="sw-lock" class="sw on" onclick="toggleOpt('lock', this)">เปิดอยู่</button>
+                </div>
+                <div class="item">
+                    <span>โหมดซิงค์สถานะหลังปิด VPN</span>
+                    <button id="sw-sync" class="sw" onclick="toggleOpt('sync', this)">ปิดอยู่</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pane-info" class="pane">
+            <div class="card">
+                <div class="title" style="margin-bottom:6px;">การใช้งาน</div>
+                <p class="sub" style="line-height:1.6;">
+                    1. กดคัดลอกลิงก์ แล้วลบโปรไฟล์เก่าในแอป Happ ก่อนเพิ่มใหม่เพื่ออัปเดตชื่อ X_HUB_PHANTOM_STORE<br>
+                    2. หากเข้าเกมแล้วปิงสูง ให้ออกไปปิด VPN ในแอป Happ แล้วกลับเข้าเกมต่อ<br>
+                    3. หน้าเว็บนี้ควบคุมเฉพาะ UI สวิตช์ คีย์ และลิงก์ในเครื่อง ไม่ได้แก้ค่าภายในตัวเกมหรือเซิร์ฟเวอร์เกม
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav">
+        <button class="active" onclick="goPane('home', this)">หน้าหลัก</button>
+        <button onclick="goPane('info', this)">ข้อมูล</button>
+    </nav>
+
+    <script>
+        const PRESET = {
+            name: "X_HUB_PHANTOM_STORE",
+            host: "sg-edge.xhub-phantom.net:443",
+            uuid: "8a2b4c6d-7e8f-4a0b-9c2d-3e4f5a6b7c8d"
+        };
+
+        const cfg = {
+            power: true,
+            lock: true,
+            sync: false,
+            pct: 100,
+            key: "PHTM-80E0-6C92-0B07"
+        };
+
+        function toast(msg) {
+            const el = document.getElementById("toast");
+            el.textContent = msg;
+            el.style.display = "block";
+            clearTimeout(window._t);
+            window._t = setTimeout(() => { el.style.display = "none"; }, 1600);
+        }
+
+        function buildLink() {
+            document.getElementById("key-box").value = cfg.key;
+            document.getElementById("link-box").value =
+                `vless://${PRESET.uuid}@${PRESET.host}?encryption=none&security=tls&type=tcp&key=${encodeURIComponent(cfg.key)}#${encodeURIComponent(PRESET.name)}`;
+        }
+
+        function makeKey() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            const seg = () => Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+            cfg.key = `PHTM-${seg()}-${seg()}-${seg()}`;
+            buildLink();
+            saveCfg();
+            toast("ออกคีย์ใหม่แล้ว");
+        }
+
+        function copyLink() {
+            const box = document.getElementById("link-box");
+            box.select();
+            box.setSelectionRange(0, 999999);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(box.value).then(() => toast("คัดลอกลิงก์แล้ว")).catch(() => {
+                    document.execCommand("copy");
+                    toast("คัดลอกลิงก์แล้ว");
+                });
+            } else {
+                document.execCommand("copy");
+                toast("คัดลอกลิงก์แล้ว");
+            }
+        }
+
+        function togglePower() {
+            cfg.power = !cfg.power;
+            renderPower();
+            saveCfg();
+            toast(cfg.power ? "เปิดใช้งานแล้ว" : "ปิดใช้งานแล้ว");
+        }
+
+        function renderPower() {
+            const btn = document.getElementById("btn-power");
+            const badge = document.getElementById("top-badge");
+            const sub = document.getElementById("top-sub");
+            btn.textContent = cfg.power ? "เปิดอยู่" : "ปิดอยู่";
+            btn.classList.toggle("on", cfg.power);
+            badge.textContent = cfg.power ? "ACTIVE" : "OFF";
+            badge.classList.toggle("on", cfg.power);
+            sub.textContent = cfg.power ? "สถานะ: เปิดใช้งานอยู่" : "สถานะ: ปิดอยู่";
+        }
+
+        function toggleOpt(key, btn) {
+            cfg[key] = !cfg[key];
+            btn.textContent = cfg[key] ? "เปิดอยู่" : "ปิดอยู่";
+            btn.classList.toggle("on", cfg[key]);
+            saveCfg();
+        }
+
+        function setPct(val) {
+            const n = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+            cfg.pct = n;
+            document.getElementById("pct-label").textContent = n + "%";
+            document.getElementById("pct-range").value = n;
+            document.querySelectorAll(".marks span").forEach(s => s.classList.remove("active"));
+            if (n >= 85) document.getElementById("m100").classList.add("active");
+            else if (n >= 64) document.getElementById("m70").classList.add("active");
+            else if (n >= 44) document.getElementById("m58").classList.add("active");
+            else if (n >= 15) document.getElementById("m30").classList.add("active");
+            else document.getElementById("m0").classList.add("active");
+            saveCfg();
+        }
+
+        function openApp(pkg) {
+            window.location.href = `intent://#Intent;package=${pkg};end;`;
+        }
+
+        function goPane(name, btn) {
+            document.querySelectorAll(".pane").forEach(p => p.classList.remove("active"));
+            document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+            document.getElementById("pane-" + name).classList.add("active");
+            btn.classList.add("active");
+        }
+
+        function saveCfg() {
+            if (!cfg.lock) return;
+            try { localStorage.setItem("xhub_preset_cfg", JSON.stringify(cfg)); } catch (e) {}
+        }
+
+        function loadCfg() {
+            try {
+                const raw = localStorage.getItem("xhub_preset_cfg");
+                if (!raw) return;
+                const d = JSON.parse(raw);
+                if (typeof d.power === "boolean") cfg.power = d.power;
+                if (typeof d.lock === "boolean") cfg.lock = d.lock;
+                if (typeof d.sync === "boolean") cfg.sync = d.sync;
+                if (typeof d.pct === "number") cfg.pct = d.pct;
+                if (typeof d.key === "string" && d.key) cfg.key = d.key;
+            } catch (e) {}
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCfg();
+            renderPower();
+            const swLock = document.getElementById("sw-lock");
+            const swSync = document.getElementById("sw-sync");
+            swLock.textContent = cfg.lock ? "เปิดอยู่" : "ปิดอยู่";
+            swLock.classList.toggle("on", cfg.lock);
+            swSync.textContent = cfg.sync ? "เปิดอยู่" : "ปิดอยู่";
+            swSync.classList.toggle("on", cfg.sync);
+            setPct(cfg.pct);
+            buildLink();
+        });
+    </script>
+</body>
+</html>
